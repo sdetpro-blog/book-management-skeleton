@@ -10,21 +10,14 @@ import java.util.List;
 public class DataFactory {
 
     public static boolean saveBookList(List<Book> books, String path) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(path);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path);
+             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
             for (Book book : books) {
                 String dataLine = book.getTitle() + ";" + book.getISBN() + ";" + book.getAuthorName() + ";" + book.getYear();
                 bufferedWriter.write(dataLine);
                 bufferedWriter.newLine();
             }
-
-            bufferedWriter.close();
-            outputStreamWriter.close();
-            fileOutputStream.close();
-
             return true;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -35,8 +28,6 @@ public class DataFactory {
 
     public static List<Book> readBookList(String path) {
         List<Book> books = new ArrayList<>();
-
-
         try {
             FileInputStream fileInputStream = new FileInputStream(path);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
@@ -57,10 +48,6 @@ public class DataFactory {
 
                 dataLIne = bufferedReader.readLine();
             }
-
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
 
         } catch (Exception e) {
             e.printStackTrace();
